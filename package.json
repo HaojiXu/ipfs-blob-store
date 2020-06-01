@@ -50,7 +50,6 @@
   },
   "dependencies": {
     "debug": "^4.1.0",
-    "ipfs-api": "^26.1.2",
     "promisify-es6": "^1.0.3"
   }
 }
