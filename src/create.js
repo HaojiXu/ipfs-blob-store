@@ -1,7 +1,6 @@
 'use strict'
 
 const promisify = require('promisify-es6')
-const remote = require('ipfs-api')
 const mfs = require('./mfs')
 const log = require('debug')('ipfs:blob-store:create')
 const defaultOptions = {
@@ -24,10 +23,7 @@ module.exports = promisify((opts, callback) => {
   }
 
   if (options.host && options.port) {
-    log(`Connecting to remote IPFS at ${options.host}:${options.port}`)
-    options.ipfs = remote(options.host, options.port)
-
-    return setImmediate(() => callback(null, mfs(options)))
+    throw new Error('Nope, this is not implemented here')
   }
 
   throw new Error('Nope, this is not implemented here')
