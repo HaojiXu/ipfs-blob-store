@@ -30,25 +30,31 @@ module.exports = function (options) {
 
     let size = 0
 
+    let bufs = [];
+
     bufferStream.on('data', (buffer) => {
-      size += buffer.length
+        bufs.push(buffer)
+        size += buffer.length
     })
 
-    ipfs.files.write(writePath, bufferStream, {
-      create: true,
-      parents: true,
-      flush: options.flush
+    bufferStream.on('end', () => {
+        let myBuf = Buffer.concat(bufs);
+        ipfs.files.write(writePath, myBuf, {
+                create: true,
+                parents: true,
+                flush: options.flush
+            })
+            .then(() => {
+                cb(null, {
+                    key: opts.key,
+                    size: size,
+                    name: path.basename(writePath)
+                })
+            })
+            .catch(error => {
+                cb(error)
+            })
     })
-      .then(() => {
-        cb(null, {
-          key: opts.key,
-          size: size,
-          name: path.basename(writePath)
-        })
-      })
-      .catch(error => {
-        cb(error)
-      })
 
     return bufferStream
   }
