@@ -61,19 +61,14 @@ module.exports = function(options) {
     }
 
     store.createReadStream = function(opts) {
+        // TODO: add error handling
         if (typeof opts === 'string') opts = { key: opts }
         if (opts.name) opts.key = opts.name
 
         const readPath = normalisePath(store.baseDir + opts.key)
 
         log(`read ${readPath}`)
-        const readableStream = a2s(ipfs.files.read(readPath));
-
-        readableStream.on('error', (error) => {
-            if (error.toString().indexOf('does not exist') > -1 || error.toString().indexOf('Not a directory') > -1) {
-                error.notFound = true
-            }
-        })
+        const readableStream = ipfs.files.read(readPath);
 
         return readableStream
     }
